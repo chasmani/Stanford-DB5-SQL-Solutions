@@ -1,0 +1,75 @@
+﻿Q1
+SELECT title
+FROM Movie
+WHERE director = "Steven Spielberg"
+
+Q2
+SELECT DISTINCT year
+FROM Movie JOIN Rating ON Movie.mID=Rating.mID
+WHERE stars >= 4
+ORDER BY year
+
+Q3
+SELECT title
+FROM Movie
+WHERE mID NOT IN(
+SELECT mID
+FROM Rating)
+
+Q4
+SELECT name 
+FROM Reviewer
+WHERE rID IN(
+SELECT rID
+FROM Rating
+WHERE ratingDate IS NULL)
+
+Q5
+SELECT name, title, stars, ratingDate
+FROM (Rating JOIN Movie ON Rating.mID=Movie.mID) S 
+JOIN Reviewer ON S.rID=Reviewer.rID
+ORDER BY name, title, stars
+
+Q6
+NO SOLUTION YET
+
+Q7
+SELECT title, MAX(stars)
+FROM(
+SELECT *
+FROM Movie JOIN Rating ON Movie.mID = Rating.mID)
+GROUP BY mID
+ORDER BY title
+
+Q8
+SELECT X.title, mx-mn AS spread
+FROM 
+(SELECT title, MAX(stars) as mx
+FROM(SELECT * FROM Movie JOIN Rating ON Movie.mID = Rating.mID)
+GROUP BY mID ORDER BY title) X
+JOIN
+(SELECT title, MIN(stars) as mn
+FROM(SELECT * FROM Movie JOIN Rating ON Movie.mID = Rating.mID)
+GROUP BY mID ORDER BY title) N
+ON X.title=N.title
+ORDER BY spread DESC, X.title
+
+Q9
+SELECT ABS(B.postAvg - A.postAvg)
+FROM
+((SELECT AVG(avgRating) as postAvg, 'post' as type
+FROM(
+SELECT title, year, AVG(stars) as avgRating
+FROM Movie NATURAL JOIN Rating
+WHERE year > 1980
+GROUP BY title)) A
+JOIN 
+(SELECT AVG(avgRating) as postAvg, 'post' as type
+FROM(
+SELECT title, year, AVG(stars) as avgRating
+FROM Movie NATURAL JOIN Rating
+WHERE year < 1980
+GROUP BY title)) B
+ON B.type=A.type)
+
+
