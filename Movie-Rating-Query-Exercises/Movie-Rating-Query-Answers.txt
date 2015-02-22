@@ -1,4 +1,4 @@
-﻿Q1
+Q1
 SELECT title
 FROM Movie
 WHERE director = "Steven Spielberg"
@@ -31,7 +31,20 @@ JOIN Reviewer ON S.rID=Reviewer.rID
 ORDER BY name, title, stars
 
 Q6
-NO SOLUTION YET
+SELECT name, title
+FROM movie, reviewer 
+WHERE rID = (
+SELECT r1.rID 
+FROM rating AS r1 JOIN rating AS r2 
+ON r1.rID = r2.rID AND r1.mID = r2.mID 
+WHERE r1.ratingDate > r2.ratingDate AND r1.stars > r2.stars
+) 
+AND mID = (
+SELECT r1.mID 
+FROM rating AS r1 JOIN rating AS r2 
+ON r1.rID = r2.rID AND r1.mID = r2.mID 
+WHERE r1.ratingDate > r2.ratingDate AND r1.stars > r2.stars
+)
 
 Q7
 SELECT title, MAX(stars)
